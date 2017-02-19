@@ -25,6 +25,7 @@ import (
 	"golang.org/x/sys/unix"
 
 	"github.com/google/gopacket"
+	"golang.org/x/net/bpf"
 )
 
 /*
@@ -118,6 +119,15 @@ func (h *TPacket) bindToInterface(ifaceName string) error {
 		Ifindex:  ifIndex,
 	}
 	return unix.Bind(h.fd, s)
+}
+
+// SetBPF asks the kernel to use the BPF provided to filter packets
+func (h *TPacket) SetBPF(filter []bpf.RawInstruction) error {
+	bpfProg := unix.SockFprog{
+		Len: uint16(len(filter))
+		Filter: (*unix.SockFilter)(unsafe.Pointer(&filter[0]))
+	}
+	return setsockopt(h.fd, unix.SOL_SOCKET, unix.SO_ATTACH_FILTER,  unsafe.Pointer(&bpfProg), unsafe.Sizeof(bpfProg))
 }
 
 // setTPacketVersion asks the kernel to set TPacket to a particular version, and returns an error on failure.

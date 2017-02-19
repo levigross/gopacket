@@ -1,3 +1,4 @@
+sudo: required
 language: go
 install:
  - go get github.com/google/gopacket
