@@ -23,9 +23,9 @@ import (
 	"unsafe"
 
 	"golang.org/x/sys/unix"
+	"golang.org/x/net/bpf"
 
 	"github.com/google/gopacket"
-	"golang.org/x/net/bpf"
 )
 
 /*
@@ -124,8 +124,8 @@ func (h *TPacket) bindToInterface(ifaceName string) error {
 // SetBPF asks the kernel to use the BPF provided to filter packets
 func (h *TPacket) SetBPF(filter []bpf.RawInstruction) error {
 	bpfProg := unix.SockFprog{
-		Len: uint16(len(filter))
-		Filter: (*unix.SockFilter)(unsafe.Pointer(&filter[0]))
+		Len: uint16(len(filter)),
+		Filter: (*unix.SockFilter)(unsafe.Pointer(&filter[0])),
 	}
 	return setsockopt(h.fd, unix.SOL_SOCKET, unix.SO_ATTACH_FILTER,  unsafe.Pointer(&bpfProg), unsafe.Sizeof(bpfProg))
 }

@@ -10,6 +10,7 @@ script:
  - go test github.com/google/gopacket/layers
  - go test github.com/google/gopacket/tcpassembly
  - go test github.com/google/gopacket/reassembly
+ - go test github.com/google/gopacket/afpacket
  - ./.travis.gofmt.sh
  - ./.travis.govet.sh
  - ./.travis.golint.sh
